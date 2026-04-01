@@ -139,11 +139,14 @@ Enter end date (YYYY-MM-DD): 2026-02-05
 
 ### 🗂️ Sample Data
 
-```csv
-date,location,avg_temp_c,max_temp_c,min_temp_c,max_wind_kph,total_precip_mm,total_snow_cm,avg_humidity,avg_visibility_km,condition,uv_index,will_rain,chance_of_rain,will_snow,chance_of_snow,sunrise,sunset,moonrise,moonset,moon_phase,moon_illumination,start_date,end_date
-2026-03-30,Hyderabad,31.5,36.6,27.4,23.8,0.9,0.0,33,10.0,Moderate rain at times,11.8,1,100,0,0,06:12 AM,06:29 PM,04:14 PM,04:16 AM,Waxing Gibbous,88,2026-03-30,2026-03-31
-2026-02-02,Kolkata,22.2,28.9,16.3,13.0,0.0,0.0,26,10.0,Sunny,3.7,0,0,0,0,06:15 AM,05:26 PM,05:57 PM,06:30 AM,Full Moon,100,2026-02-02,2026-02-05
-```
+| date | location | avg_temp_c | max_temp_c | min_temp_c | max_wind_kph | total_precip_mm | total_snow_cm | avg_humidity | avg_visibility_km | condition | uv_index | will_rain | chance_of_rain | will_snow | chance_of_snow | sunrise | sunset | moonrise | moonset | moon_phase | moon_illumination | start_date | end_date |
+|---|---|---|---|---|---|---|---|---|---|---|---|---|---|---|---|---|---|---|---|---|---|---|---|
+| 2026-03-30 | Hyderabad | 31.5 | 36.6 | 27.4 | 23.8 | 0.9 | 0.0 | 33 | 10.0 | Moderate rain at times | 11.8 | 1 | 100 | 0 | 0 | 06:12 AM | 06:29 PM | 04:14 PM | 04:16 AM | Waxing Gibbous | 88 | 2026-03-30 | 2026-03-31 |
+| 2026-03-31 | Hyderabad | 30.7 | 36.2 | 25.9 | 20.2 | 0.1 | 0.0 | 34 | 10.0 | Patchy rain possible | 12.0 | 1 | 100 | 0 | 0 | 06:12 AM | 06:29 PM | 05:07 PM | 04:53 AM | Waxing Gibbous | 94 | 2026-03-30 | 2026-03-31 |
+| 2026-02-02 | Kolkata | 22.2 | 28.9 | 16.3 | 13.0 | 0.0 | 0.0 | 26 | 10.0 | Sunny | 3.7 | 0 | 0 | 0 | 0 | 06:15 AM | 05:26 PM | 05:57 PM | 06:30 AM | Full Moon | 100 | 2026-02-02 | 2026-02-05 |
+| 2026-02-03 | Kolkata | 22.5 | 29.6 | 16.2 | 10.4 | 0.0 | 0.0 | 30 | 10.0 | Partly cloudy | 3.8 | 0 | 0 | 0 | 0 | 06:15 AM | 05:26 PM | 06:56 PM | 07:10 AM | Waning Gibbous | 99 | 2026-02-02 | 2026-02-05 |
+| 2026-02-04 | Kolkata | 24.4 | 30.7 | 19.3 | 13.0 | 0.0 | 0.0 | 34 | 10.0 | Overcast | 3.6 | 0 | 0 | 0 | 0 | 06:14 AM | 05:27 PM | 07:53 PM | 07:46 AM | Waning Gibbous | 96 | 2026-02-02 | 2026-02-05 |
+| 2026-02-05 | Kolkata | 24.0 | 30.6 | 17.9 | 18.4 | 0.0 | 0.0 | 33 | 10.0 | Sunny | 3.9 | 0 | 0 | 0 | 0 | 06:14 AM | 05:27 PM | 08:47 PM | 08:19 AM | Waning Gibbous | 90 | 2026-02-02 | 2026-02-05 |
 
 ---
 
