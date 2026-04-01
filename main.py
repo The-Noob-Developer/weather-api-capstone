@@ -1,19 +1,21 @@
 import requests
 import pandas as pd
 from datetime import datetime, timedelta
-from sqlalchemy import create_engine
+import os
+from dotenv import load_dotenv
 
-# ---------------- CONFIG ----------------
-API_KEY = "25a0a9250754489991645641263103"
+# ---------------- LOAD ENV ----------------
+load_dotenv(dotenv_path=".env")
+
+API_KEY = os.getenv("WEATHER_API_KEY")
+
+if not API_KEY:
+    raise ValueError("API key not found. Please set WEATHER_API_KEY in .env file")
+
+# ---------------- INPUT ----------------
 LOCATION = input("Enter location: ")
 START_DATE = input("Enter start date (YYYY-MM-DD): ")
 END_DATE = input("Enter end date (YYYY-MM-DD): ")
-
-# SQL Server credentials
-DB_USER = "your_username"
-DB_PASS = "your_password"
-DB_SERVER = "your_server"
-DB_NAME = "your_database"
 
 # ----------------------------------------
 
@@ -23,15 +25,45 @@ def fetch_weather(date, location):
     response = requests.get(url)
     data = response.json()
 
-    day = data['forecast']['forecastday'][0]['day']
+    # Handle API errors
+    if "error" in data:
+        raise Exception(data["error"]["message"])
+
+    forecastday = data['forecast']['forecastday'][0]
+    day = forecastday['day']
+    astro = forecastday['astro']
 
     return {
         "date": date,
         "location": location,
-        "temp_c": day['avgtemp_c'],
-        "humidity": day['avghumidity'],
-        "wind_kph": day['maxwind_kph'],
-        "condition": day['condition']['text']
+
+        "avg_temp_c": day.get('avgtemp_c'),
+        "max_temp_c": day.get('maxtemp_c'),
+        "min_temp_c": day.get('mintemp_c'),
+
+        "max_wind_kph": day.get('maxwind_kph'),
+
+        "total_precip_mm": day.get('totalprecip_mm'),
+        "total_snow_cm": day.get('totalsnow_cm'),
+
+        "avg_humidity": day.get('avghumidity'),
+        "avg_visibility_km": day.get('avgvis_km'),
+
+        "condition": day.get('condition', {}).get('text'),
+
+        "uv_index": day.get('uv'),
+
+        "will_rain": day.get('daily_will_it_rain'),
+        "chance_of_rain": day.get('daily_chance_of_rain'),
+        "will_snow": day.get('daily_will_it_snow'),
+        "chance_of_snow": day.get('daily_chance_of_snow'),
+
+        "sunrise": astro.get('sunrise'),
+        "sunset": astro.get('sunset'),
+        "moonrise": astro.get('moonrise'),
+        "moonset": astro.get('moonset'),
+        "moon_phase": astro.get('moon_phase'),
+        "moon_illumination": astro.get('moon_illumination')
     }
 
 
@@ -55,39 +87,42 @@ def extract_data():
         print(f"Fetching data for {d}")
         try:
             row = fetch_weather(d, LOCATION)
-
-            # add required fields
             row["start_date"] = START_DATE
             row["end_date"] = END_DATE
-
             results.append(row)
         except Exception as e:
             print(f"Error on {d}: {e}")
 
-    return pd.DataFrame(results)
+    df = pd.DataFrame(results)
+
+    if df.empty:
+        print("No data fetched. Check API/date range.")
+        return None
+
+    return df
 
 
 def save_to_csv(df):
-    df.to_csv("weather.csv", index=False)
-    print("CSV saved")
+    file_name = "weather.csv"
 
+    if df is None:
+        print("Nothing to save.")
+        return
 
-def load_to_sql(df):
-    engine = create_engine(
-        f"mssql+pyodbc://{DB_USER}:{DB_PASS}@{DB_SERVER}/{DB_NAME}?driver=ODBC+Driver+17+for+SQL+Server"
-    )
-
-    df.to_sql("weather_data", engine, if_exists="append", index=False)
-    print("Data inserted into SQL Server")
+    if os.path.exists(file_name):
+        existing_df = pd.read_csv(file_name)
+        combined_df = pd.concat([existing_df, df]).drop_duplicates()
+        combined_df.to_csv(file_name, index=False)
+        print("Data appended + duplicates removed")
+    else:
+        df.to_csv(file_name, index=False)
+        print("New CSV created")
 
 
 # ---------------- MAIN ----------------
 if __name__ == "__main__":
     df = extract_data()
 
-    print(df.head())
-
-    save_to_csv(df)
-
-    # Uncomment after DB setup is ready
-    # load_to_sql(df)
+    if df is not None:
+        print(df.head())
+        save_to_csv(df)
